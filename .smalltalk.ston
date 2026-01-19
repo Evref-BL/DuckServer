@@ -1,0 +1,17 @@
+SmalltalkCISpec {
+  #loading : [
+    SCIMetacelloLoadSpec {
+      #baseline : 'DuckLanguageServer',
+      #directory : 'src',
+      #ignoreImage : true,
+      #onConflict : #useIncoming,
+      #onUpgrade : #useIncoming
+    }
+  ],
+  #testing : {
+    #coverage : {
+      #packages : [ 'DuckLanguageServer.*' ],
+      #format : #lcov
+    }
+  }
+}
