@@ -46,13 +46,13 @@ DuckJavaDocument >> codeLens [
 		withCorrespondingFast: fast.
 
 	"5- Get fastRules grouped by the entities"
-	fastRules := self collectRulesFor: FASTJavaRules.
+	fastRules := self collectRulesFor: DuckFASTJavaRules.
 
 	"6- Execute fastRules over fastModel"
 	codeLens := self collectCodeLensFor: fastRules using: fast.
 
 	"7- Get famixRules grouped by the entities"
-	famixRules := self collectRulesFor: FamixJavaRules.
+	famixRules := self collectRulesFor: DuckFamixJavaRules.
 
 	"8- Execute famixRules over famixModel"
 	codeLens addAll:

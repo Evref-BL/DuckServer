@@ -58,8 +58,8 @@ BaselineOfDuckLanguageServer >> definePackages: spec [
 
 	spec package: 'DuckLanguageServer' with: [
 		spec requires: #( 'PharoLanguageServer' 'FamixJavaModelUpdater'
-			   'FamixHtml' 'LLMAPI' ) ].
-
+			   'DuckLanguageServer-Rules' 'FamixHtml' 'LLMAPI' ) ].
+	spec package: 'DuckLanguageServer-Rules'.
 	spec
 		package: 'DuckLanguageServer-Tests'
 		with: [ spec requires: #( 'DuckLanguageServer' 'Mocketry' ) ]
