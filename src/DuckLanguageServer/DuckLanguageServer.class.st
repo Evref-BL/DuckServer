@@ -9,38 +9,6 @@ Class {
 	#package : 'DuckLanguageServer'
 }
 
-{ #category : 'blps - graph view' }
-DuckLanguageServer >> blsGraphViewForTextDocument: textDocument atPosition: position [
-
-	<jrpc: #'bls:graph-view'>
-	| internalTextDocument data |
-	internalTextDocument := self context textItem:
-		                        (textDocument at: #uri at: #external).
-
-	data := DuckGraphDataBuilder new
-		        entity: internalTextDocument;
-		        buildData.
-	^ data asJRPCJSON
-]
-
-{ #category : 'bls - rules' }
-DuckLanguageServer >> blsUpdateRules: rulesFilePath [
-
-	<jrpc: #'bls:updateRules'>
-	self criticsPath: rulesFilePath.
-	self loadCriticsRule.
-	^ true
-]
-
-{ #category : 'bls - rules' }
-DuckLanguageServer >> blsUpdateSettingsMistral: mistralApiKey andJiraUser: jiraUser andJiraApiKey: jiraApiKey [
-
-	<jrpc: #'bls:updateSettings'>
-	(mistralApiKey isNotNil and: [ mistralApiKey isNotEmpty ]) ifTrue: [
-		LLMAPI apiKey: mistralApiKey ].
-	^ true
-]
-
 { #category : 'lsp - code action' }
 DuckLanguageServer >> buildCodeActionShowDescriptionFor: diagnostic [
 
@@ -82,11 +50,11 @@ DuckLanguageServer >> codeActionForDocument: textDocument atRange: range withCon
 	^ actions asArray
 ]
 
-{ #category : 'bls - version' }
+{ #category : 'duck - version' }
 DuckLanguageServer >> commandPharoLanguageServerVersion [
 
-	<jrpc: #'bls:version'>
-	^ 'v1.1.2'
+	<jrpc: #'duck:version'>
+	^ '0.0.0'
 ]
 
 { #category : 'accessing' }
@@ -111,28 +79,6 @@ DuckLanguageServer >> criticsPath [
 DuckLanguageServer >> criticsPath: anObject [
 
 	criticsPath := anObject
-]
-
-{ #category : 'dash - tools' }
-DuckLanguageServer >> dashOpenTool: id [
-
-	<jrpc: #'dash:openTool'>
-	(self class environment at: id asSymbol) open.
-	^ 'tool opened'
-]
-
-{ #category : 'dash - tools' }
-DuckLanguageServer >> dashTools [
-
-	<jrpc: #'dash:dashTools'>
-	^ (MiAbstractBrowser allSubclasses
-		   reject: #isAbstract
-		   thenCollect: [ :class |
-			   DuckTool new
-				   name: class menuLabel;
-				   id: class name;
-				   isDirectory: false;
-				   yourself ]) asArray
 ]
 
 { #category : 'lsp - text synchronisation' }
@@ -189,6 +135,60 @@ DuckLanguageServer >> didSave: textDocument text: text [
 	<jrpc: #'textDocument/didSave'>
 ]
 
+{ #category : 'duck - graph view' }
+DuckLanguageServer >> duckGraphViewForTextDocument: textDocument atPosition: position [
+
+	<jrpc: #'duck:graph-view'>
+	| internalTextDocument data |
+	internalTextDocument := self context textItem:
+		                        (textDocument at: #uri at: #external).
+
+	data := DuckGraphDataBuilder new
+		        entity: internalTextDocument;
+		        buildData.
+	^ data asJRPCJSON
+]
+
+{ #category : 'duck - tools' }
+DuckLanguageServer >> duckOpenTool: id [
+
+	<jrpc: #'duck:openTool'>
+	(self class environment at: id asSymbol) open.
+	^ 'tool opened'
+]
+
+{ #category : 'duck - tools' }
+DuckLanguageServer >> duckTools [
+
+	<jrpc: #'duck:dashTools'>
+	^ (MiAbstractBrowser allSubclasses
+		   reject: #isAbstract
+		   thenCollect: [ :class |
+			   DuckTool new
+				   name: class menuLabel;
+				   id: class name;
+				   isDirectory: false;
+				   yourself ]) asArray
+]
+
+{ #category : 'duck - rules' }
+DuckLanguageServer >> duckUpdateRules: rulesFilePath [
+
+	<jrpc: #'duck:updateRules'>
+	self criticsPath: rulesFilePath.
+	self loadCriticsRule.
+	^ true
+]
+
+{ #category : 'duck - rules' }
+DuckLanguageServer >> duckUpdateSettingsMistral: mistralApiKey [
+
+	<jrpc: #'duck:updateSettings'>
+	(mistralApiKey isNotNil and: [ mistralApiKey isNotEmpty ]) ifTrue: [
+		LLMAPI apiKey: mistralApiKey ].
+	^ true
+]
+
 { #category : 'private' }
 DuckLanguageServer >> fixEncodingOf: aString [
 
@@ -198,10 +198,10 @@ DuckLanguageServer >> fixEncodingOf: aString [
 		  ^ aString ]
 ]
 
-{ #category : 'bls - rules' }
+{ #category : 'duck - rules' }
 DuckLanguageServer >> fixWithAI: rulePath ofDocument: textDocumentURI [
 
-	<jrpc: #'bls:fixWithAI'>
+	<jrpc: #'duck:fixWithAI'>
 	| textDocument api result id rule answer concernedStartPos concernedEndPos concernedText |
 	textDocument := self context textItem: textDocumentURI.
 
@@ -264,10 +264,10 @@ Be creative! Only give me the code without any explanation. Do not add comment i
 	^ 'success'
 ]
 
-{ #category : 'blps - codelens - generate comments' }
+{ #category : 'duck - codelens - generate comments' }
 DuckLanguageServer >> generateCommentFor: uri from: startPos to: endPos [
 
-	<jrpc: #'blps.generateComment'>
+	<jrpc: #'duck.generateComment'>
 	| textString methodString api result resultContent |
 	textString := (self context textItem: uri) text.
 	methodString := textString
@@ -327,7 +327,7 @@ DuckLanguageServer >> initialize [
 	self loadCriticsRule
 ]
 
-{ #category : 'bls - initialization' }
+{ #category : 'duck - initialization' }
 DuckLanguageServer >> loadCriticsRule [
 	"Remove all. Code found in the tests"
 
@@ -409,10 +409,10 @@ DuckLanguageServer >> serverName [
 	^ #'Duck Language Server'
 ]
 
-{ #category : 'bls - rules' }
+{ #category : 'duck - rules' }
 DuckLanguageServer >> showRuleDescription: rulePath [
 
-	<jrpc: #'bls:showRuleDescription'>
+	<jrpc: #'duck:showRuleDescription'>
 	| id |
 	id := (((rulePath at: #authority) withoutPrefix: '/') withoutSuffix:
 		       '.md') asInteger.
