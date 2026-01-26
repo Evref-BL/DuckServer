@@ -279,7 +279,9 @@ DuckLanguageServer >> generateCommentFor: uri from: startPos to: endPos [
 	api payload
 		model: 'mistral-small-latest';
 		top_p: 1;
-		response_format: 'json';
+		response_format: (LLMAPIChatObjectResponseFormat new
+				 type: #json_object;
+				 yourself);
 		messages: {
 				(LLMAPIChatObjectMessage
 					 role: 'system'
